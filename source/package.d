@@ -38,7 +38,7 @@ public:
     ///
     BigFixed convertPrecision(size_t newprecision) nothrow
     {
-        long diff = (cast(long) newprecision) - prec;
+        sizediff_t diff = (cast(long) newprecision) - prec;
         data <<= diff;
         prec = newprecision;
         return this;
