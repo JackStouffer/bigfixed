@@ -85,4 +85,26 @@ public:
         b2 = b1;
         assert(b2 == BigFixed(123, 5));
     }
+
+    /// Convert the BigFixed to string
+    string toDecimalString(size_t decimal_digits)
+    {
+        import std.conv : to;
+        import std.string : rightJustify;
+
+        auto b = this.data * (10 ^^ decimal_digits);
+        b >>= prec;
+        immutable str = b.to!string;
+        immutable sign = (this.data < 0) ? "-" : "";
+        immutable begin = sign.length;
+        if (str.length - begin <= decimal_digits)
+        {
+            return sign ~ "0." ~ rightJustify(str[begin .. $], decimal_digits, '0');
+        }
+        else
+        {
+            return sign ~ str[begin .. $ - decimal_digits] ~ "." ~ str[$ - decimal_digits .. $];
+        }
+    }
+
 }
