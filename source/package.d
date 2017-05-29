@@ -107,4 +107,23 @@ public:
         }
     }
 
+    /// Minimum number that can be represented greater than 0
+    @property BigFixed resolution()
+    {
+        auto result = BigFixed(0,this.Q);
+        result.data = 1;
+        return result;
+    }
+    ///
+    @system unittest
+    {
+        auto b1 = BigFixed(0,1).resolution;
+        assert(b1.toDecimalString(1) == "0.5");
+
+        auto b2 = BigFixed(100,1).resolution;
+        assert(b2.toDecimalString(1) == "0.5");
+
+        auto b3 = BigFixed(100,3).resolution;
+        assert(b3.toDecimalString(3) == "0.125");
+    }
 }
