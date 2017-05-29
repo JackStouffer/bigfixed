@@ -10,21 +10,21 @@ struct BigFixed
 {
 private:
     BigInt data;
-    size_t prec;
+    size_t Q;
 public:
     /// Construct BigFixed from a built-in integral type
-    this(T)(T x, size_t precision) pure nothrow if (isIntegral!T)
+    this(T)(T x, size_t Q) pure nothrow if (isIntegral!T)
     {
         data = BigInt(x);
-        prec = precision;
-        data <<= prec;
+        this.Q = Q;
+        data <<= this.Q;
     }
     /// Construct BigFixed from BigInt
-    this(T : BigInt)(T x, size_t precision) pure nothrow
+    this(T : BigInt)(T x, size_t Q) pure nothrow
     {
         data = BigInt(x);
-        prec = precision;
-        data <<= prec;
+        this.Q = Q;
+        data <<= this.Q;
     }
     ///
     @system unittest
@@ -36,11 +36,11 @@ public:
     }
 
     ///
-    BigFixed convertPrecision(size_t newprecision) nothrow
+    BigFixed convertQ(size_t newQ) nothrow
     {
-        sizediff_t diff = (cast(long) newprecision) - prec;
+        sizediff_t diff = (cast(long) newQ) - this.Q;
         data <<= diff;
-        prec = newprecision;
+        this.Q = newQ;
         return this;
     }
     ///
@@ -48,10 +48,10 @@ public:
     {
         auto b = BigFixed(5, 10);
 
-        b.convertPrecision(5);
+        b.convertQ(5);
         assert(b == BigFixed(5, 5));
 
-        assert(b.convertPrecision(10) == BigFixed(5, 10));
+        assert(b.convertQ(10) == BigFixed(5, 10));
         assert(b == BigFixed(5, 10));
     }
 
@@ -59,7 +59,7 @@ public:
     BigFixed opAssign(T)(T x) pure nothrow if (isIntegral!T)
     {
         data = BigInt(x);
-        data <<= prec;
+        data <<= this.Q;
         return this;
     }
     ///
@@ -74,7 +74,7 @@ public:
     BigFixed opAssign(T : BigFixed)(T x) pure @nogc
     {
         data = x.data;
-        prec = x.prec;
+        this.Q = x.Q;
         return this;
     }
     ///
@@ -93,7 +93,7 @@ public:
         import std.string : rightJustify;
 
         auto b = this.data * (10 ^^ decimal_digits);
-        b >>= prec;
+        b >>= this.Q;
         immutable str = b.to!string;
         immutable sign = (this.data < 0) ? "-" : "";
         immutable begin = sign.length;
