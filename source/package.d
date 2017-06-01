@@ -36,7 +36,7 @@ public:
     }
 
     ///
-    BigFixed convertQ(size_t newQ) nothrow
+    BigFixed convertQ(size_t newQ) pure nothrow
     {
         if (this.Q != newQ)
         {
