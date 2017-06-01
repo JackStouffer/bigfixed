@@ -129,4 +129,41 @@ public:
         auto b3 = BigFixed(100, 3).resolution;
         assert(b3.toDecimalString(3) == "0.125");
     }
+    /// Implements assignment operators from BigFixed of the form `BigFixed op= BigFixed`
+    BigFixed opOpAssign(string op, T : BigFixed)(T y) pure nothrow 
+            if (op == "+" || op == "-" || op == "*" || op == "/")
+    {
+        static if (op == "+")
+        {
+            this.data += y.convertQ(this.Q).data;
+        }
+        else static if (op == "-")
+        {
+            this.data -= y.convertQ(this.Q).data;
+        }
+        else static if (op == "*")
+        {
+            this.data *= y.convertQ(this.Q).data;
+            this.data >>= this.Q;
+        }
+        else static if (op == "/")
+        {
+            this.data <<= this.Q;
+            this.data /= y.convertQ(this.Q).data;
+        }
+        return this;
+    }
+
+    @system unittest
+    {
+        auto b1 = BigFixed(1,10);
+        b1 /= BigFixed(4,10);
+        assert(b1.toDecimalString(2) == "0.25");
+        b1 += BigFixed(1,0);
+        assert(b1.toDecimalString(2) == "1.25");
+        b1 *= BigFixed(2,5);
+        assert(b1.toDecimalString(2) == "2.50");
+        b1 -= BigFixed(1,0);
+        assert(b1.toDecimalString(2) == "1.50");
+    }
 }
