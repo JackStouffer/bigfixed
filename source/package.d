@@ -38,9 +38,12 @@ public:
     ///
     BigFixed convertQ(size_t newQ) nothrow
     {
-        sizediff_t diff = (cast(long) newQ) - this.Q;
-        data <<= diff;
-        this.Q = newQ;
+        if (this.Q != newQ)
+        {
+            sizediff_t diff = (cast(long) newQ) - this.Q;
+            data <<= diff;
+            this.Q = newQ;
+        }
         return this;
     }
     ///
