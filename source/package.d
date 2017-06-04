@@ -156,14 +156,14 @@ public:
 
     @system unittest
     {
-        auto b1 = BigFixed(1,10);
-        b1 /= BigFixed(4,10);
+        auto b1 = BigFixed(1, 10);
+        b1 /= BigFixed(4, 10);
         assert(b1.toDecimalString(2) == "0.25");
-        b1 += BigFixed(1,0);
+        b1 += BigFixed(1, 0);
         assert(b1.toDecimalString(2) == "1.25");
-        b1 *= BigFixed(2,5);
+        b1 *= BigFixed(2, 5);
         assert(b1.toDecimalString(2) == "2.50");
-        b1 -= BigFixed(1,0);
+        b1 -= BigFixed(1, 0);
         assert(b1.toDecimalString(2) == "1.50");
     }
 }
