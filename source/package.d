@@ -151,6 +151,8 @@ public:
             this.data <<= this.Q;
             this.data /= y.convertQ(this.Q).data;
         }
+        else
+            static assert(0, "BigFixed " ~ op[0 .. $ - 1] ~ "= " ~ T.stringof ~ " is not supported");
         return this;
     }
 
