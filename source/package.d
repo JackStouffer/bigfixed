@@ -168,4 +168,41 @@ public:
         b1 -= BigFixed(1, 0);
         assert(b1.toDecimalString(2) == "1.50");
     }
+    /// Implements assignment operators from built-in integers of the form `BigFixed op= Integer`
+    BigFixed opOpAssign(string op, T)(T y) pure nothrow 
+            if ((op == "+" || op == "-" || op == "*" || op == "/") && isIntegral!T)
+    {
+        static if (op == "+")
+        {
+            this.data += (BigInt(y) << this.Q);
+        }
+        else static if (op == "-")
+        {
+            this.data -= (BigInt(y) << this.Q);
+        }
+        else static if (op == "*")
+        {
+            this.data *= y;
+        }
+        else static if (op == "/")
+        {
+            this.data /= y;
+        }
+        else
+            static assert(0, "BigFixed " ~ op[0 .. $ - 1] ~ "= " ~ T.stringof ~ " is not supported");
+        return this;
+    }
+    ///
+    @system unittest
+    {
+        auto b1 = BigFixed(1, 10);
+        b1 /= 4;
+        assert(b1.toDecimalString(2) == "0.25");
+        b1 += 1;
+        assert(b1.toDecimalString(2) == "1.25");
+        b1 *= 2;
+        assert(b1.toDecimalString(2) == "2.50");
+        b1 -= 1;
+        assert(b1.toDecimalString(2) == "1.50");
+    }
 }
