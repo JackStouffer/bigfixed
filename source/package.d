@@ -46,6 +46,11 @@ public:
         }
         return this;
     }
+    /// the number of fractional bits
+    @property size_t fractional_bits() pure nothrow
+    {
+        return this.Q;
+    }
     ///
     @system unittest
     {
