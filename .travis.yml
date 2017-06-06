@@ -5,5 +5,9 @@ d:
   - dmd
   - ldc
 
+install:
+  - dub fetch doveralls
+
 script:
-  - dub test --compiler=${DC}
+  - dub test --compiler=${DC} -b unittest-cov
+  - dub run doveralls
