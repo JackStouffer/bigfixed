@@ -60,7 +60,7 @@ public:
         assert(b == BigFixed(5, 5));
 
         assert(b.convertQ(10) == BigFixed(5, 10));
-        assert(b == BigFixed(5, 10));
+        assert(b.fractional_bits == 10);
     }
 
     /// Assignment from built-in integer types
