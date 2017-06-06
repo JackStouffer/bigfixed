@@ -223,4 +223,20 @@ public:
         b1 >>= 2;
         assert(b1.toDecimalString(2) == "0.75");
     }
+    /// Implements binary operators between BigFixed
+    BigFixed opBinary(string op, T : BigFixed)(T y) pure nothrow const 
+            if (op == "+" || op == "*" || op == "-" || op == "/")
+    {
+        BigFixed r = this;
+        return r.opOpAssign!(op)(y);
+    }
+    ///
+    @system unittest
+    {
+        auto b1 = BigFixed(1, 10);
+        assert((b1 / BigFixed(4, 10)).toDecimalString(2) == "0.25");
+        assert((b1 + BigFixed(2, 10)).toDecimalString(2) == "3.00");
+        assert((b1 * BigFixed(2, 10)).toDecimalString(2) == "2.00");
+        assert((b1 - BigFixed(1, 10)).toDecimalString(2) == "0.00");
+    }
 }
