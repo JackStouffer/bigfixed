@@ -175,8 +175,8 @@ public:
     }
     /// Implements assignment operators from built-in integers of the form `BigFixed op= Integer`
     BigFixed opOpAssign(string op, T)(T y) pure nothrow 
-            if ((op == "+" || op == "-" || op == "*" || op == "/" || op == ">>" || op == "<<")
-                && isIntegral!T)
+            if ((op == "+" || op == "-" || op == "*" || op == "/" || op == ">>"
+                || op == "<<" || op == "|" || op == "&" || op == "^") && isIntegral!T)
     {
         static if (op == "+")
         {
@@ -202,6 +202,18 @@ public:
         {
             this.data <<= y;
         }
+        else static if (op == "|")
+        {
+            this.data |= y;
+        }
+        else static if (op == "&")
+        {
+            this.data &= y;
+        }
+        else static if (op == "^")
+        {
+            this.data ^= y;
+        }
         else
             static assert(0, "BigFixed " ~ op[0 .. $ - 1] ~ "= " ~ T.stringof ~ " is not supported");
         return this;
@@ -222,6 +234,48 @@ public:
         assert(b1.toDecimalString(2) == "3.00");
         b1 >>= 2;
         assert(b1.toDecimalString(2) == "0.75");
+        b1 |= (1 << 5);
+        assert(b1.toDecimalString(5) == "0.78125");
+        b1 &= (1 << 5);
+        assert(b1.toDecimalString(5) == "0.03125");
+        b1 ^= (1 << 5);
+        assert(b1.toDecimalString(5) == "0.00000");
+    }
+    /// Implements bitwise assignment operators from BigInt of the form `BigFixed op= BigInt
+    BigFixed opOpAssign(string op, T : BigInt)(T y) pure nothrow 
+            if (op == "+" || op == "-" || op == "*" || op == "/" || op == "|" || op == "&"
+                || op == "^")
+    {
+        static if (op == "+" || op == "-")
+        {
+            (this.data).opOpAssign!op(y << this.Q);
+        }
+        else static if (op == "*" || op == "/" || op == "|" || op == "&" || op == "^")
+        {
+            (this.data).opOpAssign!op(y);
+        }
+        else
+            static assert(0, "BigFixed " ~ op[0 .. $ - 1] ~ "= " ~ T.stringof ~ " is not supported");
+        return this;
+    }
+    ///
+    @system unittest
+    {
+        auto b1 = BigFixed(1, 10);
+        b1 /= BigInt(4);
+        assert(b1.toDecimalString(2) == "0.25");
+        b1 += BigInt(1);
+        assert(b1.toDecimalString(2) == "1.25");
+        b1 *= BigInt(2);
+        assert(b1.toDecimalString(2) == "2.50");
+        b1 -= BigInt(1);
+        assert(b1.toDecimalString(2) == "1.50");
+        b1 |= BigInt(1 << 5);
+        assert(b1.toDecimalString(5) == "1.53125");
+        b1 &= BigInt(1 << 5);
+        assert(b1.toDecimalString(5) == "0.03125");
+        b1 ^= BigInt(1 << 5);
+        assert(b1.toDecimalString(5) == "0.00000");
     }
     /// Implements binary operators between BigFixed
     BigFixed opBinary(string op, T : BigFixed)(T y) pure nothrow const 
