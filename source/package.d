@@ -138,13 +138,9 @@ public:
     BigFixed opOpAssign(string op, T : BigFixed)(T y) pure nothrow 
             if (op == "+" || op == "-" || op == "*" || op == "/")
     {
-        static if (op == "+")
+        static if (op == "+" || op == "-")
         {
-            this.data += y.convertQ(this.Q).data;
-        }
-        else static if (op == "-")
-        {
-            this.data -= y.convertQ(this.Q).data;
+            (this.data).opOpAssign!op(y.convertQ(this.Q).data);
         }
         else static if (op == "*")
         {
@@ -178,41 +174,14 @@ public:
             if ((op == "+" || op == "-" || op == "*" || op == "/" || op == ">>"
                 || op == "<<" || op == "|" || op == "&" || op == "^") && isIntegral!T)
     {
-        static if (op == "+")
+        static if (op == "+" || op == "-")
         {
-            this.data += (BigInt(y) << this.Q);
+            (this.data).opOpAssign!op(BigInt(y) << this.Q);
         }
-        else static if (op == "-")
+        else static if (op == "*" || op == "/" || op == ">>" || op == "<<"
+                || op == "|" || op == "&" || op == "^")
         {
-            this.data -= (BigInt(y) << this.Q);
-        }
-        else static if (op == "*")
-        {
-            this.data *= y;
-        }
-        else static if (op == "/")
-        {
-            this.data /= y;
-        }
-        else static if (op == ">>")
-        {
-            this.data >>= y;
-        }
-        else static if (op == "<<")
-        {
-            this.data <<= y;
-        }
-        else static if (op == "|")
-        {
-            this.data |= y;
-        }
-        else static if (op == "&")
-        {
-            this.data &= y;
-        }
-        else static if (op == "^")
-        {
-            this.data ^= y;
+            (this.data).opOpAssign!op(y);
         }
         else
             static assert(0, "BigFixed " ~ op[0 .. $ - 1] ~ "= " ~ T.stringof ~ " is not supported");
