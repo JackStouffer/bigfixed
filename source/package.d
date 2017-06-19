@@ -262,4 +262,19 @@ public:
         assert((b1 * BigFixed(2, 10)).toDecimalString(2) == "2.00");
         assert((b1 - BigFixed(1, 10)).toDecimalString(2) == "0.00");
     }
+    /// Implements binary operators between BigInt
+    BigFixed opBinary(string op, T : BigInt)(T y) pure nothrow const 
+            if (op == "|" || op == "&" || op == "^")
+    {
+        BigFixed r = this;
+        return r.opOpAssign!(op)(y);
+    }
+    ///
+    @system unittest
+    {
+        auto b1 = BigFixed(1, 10);
+        assert((b1 | (BigInt(1) << 9)).toDecimalString(2) == "1.50");
+        assert((b1 & (BigInt(1) << 9)).toDecimalString(2) == "0.00");
+        assert((b1 ^ (BigInt(1) << 9)).toDecimalString(2) == "1.50");
+    }
 }
