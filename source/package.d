@@ -299,4 +299,28 @@ public:
         assert((b1 & 1).toDecimalString(2) == "0.00");
         assert((b1 ^ (1 << 9)).toDecimalString(2) == "1.50");
     }
+    /// Implements binary operators of the form `Integer op BigFixed`
+    BigFixed opBinaryRight(string op, T)(T y) pure nothrow const 
+            if ((op == "+" || op == "*" || op == "|" || op == "&" || op == "^") && isIntegral!T)
+    {
+        return this.opBinary!(op)(y);
+    }
+    /// ditto
+    BigFixed opBinaryRight(string op, T)(T y) pure nothrow 
+            if ((op == "-" || op == "/") && isIntegral!T)
+    {
+        return BigFixed(y, this.Q).opBinary!(op)(this);
+    }
+    ///
+    @system unittest
+    {
+        auto b1 = BigFixed(1, 10);
+        assert((1 + b1).toDecimalString(2) == "2.00");
+        assert((1 - b1).toDecimalString(2) == "0.00");
+        assert((2 * b1).toDecimalString(2) == "2.00");
+        assert((2 / b1).toDecimalString(2) == "2.00");
+        assert(((1 << 9) | b1).toDecimalString(2) == "1.50");
+        assert((1 & b1).toDecimalString(2) == "0.00");
+        assert(((1 << 9) ^ b1).toDecimalString(2) == "1.50");
+    }
 }
