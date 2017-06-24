@@ -323,4 +323,18 @@ public:
         assert((1 & b1).toDecimalString(2) == "0.00");
         assert(((1 << 9) ^ b1).toDecimalString(2) == "1.50");
     }
+    /// Implements BigFixed equality test
+    bool opEquals()(auto ref const BigFixed y) const pure @nogc
+    {
+        return (this.data == y.data) && (this.Q == y.Q);
+    }
+    ///
+    @system unittest
+    {
+        auto x = BigFixed(1, 10) / 2;
+        auto y = BigFixed(5, 10) / 2;
+        assert(x == x);
+        assert(x != y);
+        assert((x + 2) == y);
+    }
 }
