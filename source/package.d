@@ -210,7 +210,7 @@ public:
         b1 ^= (1 << 5);
         assert(b1.toDecimalString(5) == "0.00000");
     }
-    /// Implements bitwise assignment operators from BigInt of the form `BigFixed op= BigInt
+    /// Implements bitwise assignment operators from BigInt of the form `BigFixed op= BigInt`
     BigFixed opOpAssign(string op, T : BigInt)(T y) pure nothrow 
             if (op == "+" || op == "-" || op == "*" || op == "/" || op == "|" || op == "&"
                 || op == "^")
