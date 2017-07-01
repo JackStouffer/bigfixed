@@ -119,7 +119,7 @@ public:
     }
 
     /// Minimum number that can be represented greater than 0
-    @property BigFixed resolution()
+    @property BigFixed resolution() pure
     {
         auto result = BigFixed(0, this.Q);
         result.data = 1;
