@@ -40,11 +40,17 @@ public:
     {
         if (this.Q != newQ)
         {
-            sizediff_t diff = (cast(long) newQ) - this.Q;
-            data <<= diff;
-            this.Q = newQ;
+            BigFixed b = this;
+            sizediff_t diff = (cast(long) newQ) - b.Q;
+            b.data <<= diff;
+            b.Q = newQ;
+            return b;
         }
-        return this;
+        else
+        {
+            return this;
+
+        }
     }
     /// the number of fractional bits
     @property size_t fractional_bits() pure nothrow
@@ -55,9 +61,6 @@ public:
     @system unittest
     {
         auto b = BigFixed(5, 10);
-
-        b.convertQ(5);
-        assert(b == BigFixed(5, 5));
 
         assert(b.convertQ(10) == BigFixed(5, 10));
         assert(b.fractional_bits == 10);
