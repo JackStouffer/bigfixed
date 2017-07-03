@@ -340,4 +340,29 @@ public:
         assert(x != y);
         assert((x + 2) == y);
     }
+    /** Implements 3-way comparisons of BigFixed with BigFixed
+        or BigFixed with built-in integers.
+    **/
+    int opCmp(ref const BigFixed y) pure nothrow const
+    {
+        return this.data.opCmp(y.convertQ(this.Q).data);
+    }
+    /// ditto
+    int opCmp(T)(T y) pure nothrow const if (isIntegral!T)
+    {
+        return this.data.opCmp(BigInt(y) << this.Q);
+    }
+    ///
+    @system unittest
+    {
+        immutable x = BigFixed(100, 10);
+        immutable y = BigFixed(10, 10);
+        immutable int z = 50;
+        const int w = 200;
+
+        assert(y < x);
+        assert(x > z);
+        assert(z > y);
+        assert(x < w);
+    }
 }
