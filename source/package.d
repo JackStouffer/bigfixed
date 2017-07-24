@@ -1,4 +1,37 @@
+/// This module provides arbitrary precision fixed-point arithmetic.
 module bigfixed;
+///
+@system unittest
+{
+    // Return the square root of `n` to `prec` decimal places by a method of bisection.
+    string sqrt(ulong n, size_t prec)
+    {
+        import std.conv : to;
+        import std.math : ceil, log10;
+
+        immutable size_t q = (prec / log10(2.0)).ceil.to!size_t() + 1;
+        auto low = BigFixed(0, q);
+        auto high = BigFixed(n, q);
+
+        while ((high - low) != high.resolution) // BigFixed is integer internally.
+        {
+            immutable BigFixed mid = (high + low) >> 1; // Shift Expressions can be used.
+            immutable bool isLess = (mid * mid) < n;
+            if (isLess)
+            {
+                low = mid;
+            }
+            else
+            {
+                high = mid;
+            }
+        }
+        return low.toDecimalString(prec);
+    }
+    // 10 digits before the 1,000th digit. See http://www.h2.dion.ne.jp/~dra/suu/chi2/heihoukon/2.html
+    immutable sqrt2_tail = "9518488472";
+    assert(sqrt(2, 1000)[$ - 10 .. $] == sqrt2_tail);
+}
 
 import std.bigint : BigInt;
 import std.traits : isIntegral;
@@ -103,7 +136,7 @@ public:
         import std.conv : to;
         import std.string : rightJustify;
 
-        auto b = this.data * (10 ^^ decimal_digits);
+        auto b = this.data * (BigInt(10) ^^ decimal_digits);
         b >>= this.Q;
         immutable str = b.to!string;
         immutable sign = (this.data < 0) ? "-" : "";
@@ -374,12 +407,12 @@ public:
     @safe unittest
     {
         string[BigFixed] aa;
-        aa[BigFixed(123,10)] = "abc";
-        aa[BigFixed(456,10)] = "def";
-        aa[BigFixed(456,5)] = "ghi";
+        aa[BigFixed(123, 10)] = "abc";
+        aa[BigFixed(456, 10)] = "def";
+        aa[BigFixed(456, 5)] = "ghi";
 
-        assert(aa[BigFixed(123,10)] == "abc");
-        assert(aa[BigFixed(456,10)] == "def");
-        assert(aa[BigFixed(456,5)] == "ghi");
+        assert(aa[BigFixed(123, 10)] == "abc");
+        assert(aa[BigFixed(456, 10)] == "def");
+        assert(aa[BigFixed(456, 5)] == "ghi");
     }
 }
