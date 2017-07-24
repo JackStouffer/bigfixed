@@ -3,7 +3,7 @@
 	"authors": [
 		"kotet"
 	],
-	"description": "Arbitrary-precision fixed point number that using std.bigint internally",
+	"description": "arbitrary precision fixed-point arithmetic",
 	"copyright": "Copyright © 2017, kotet",
 	"license": "MIT",
 	"targetType": "library"

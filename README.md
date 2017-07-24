@@ -5,7 +5,7 @@
 [![DUB](https://img.shields.io/dub/v/bigfixed.svg)](https://code.dlang.org/packages/bigfixed)
 [![DUB](https://img.shields.io/dub/dt/bigfixed.svg)](https://code.dlang.org/packages/bigfixed)
 
-Arbitrary-precision fixed point number that using std.bigint internally
+This module provides arbitrary precision fixed-point arithmetic.
 
 ```d
 // Return the square root of `n` to `prec` decimal places by a method of bisection.
