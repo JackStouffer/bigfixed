@@ -103,7 +103,7 @@ public:
         import std.conv : to;
         import std.string : rightJustify;
 
-        auto b = this.data * (10 ^^ decimal_digits);
+        auto b = this.data * (BigInt(10) ^^ decimal_digits);
         b >>= this.Q;
         immutable str = b.to!string;
         immutable sign = (this.data < 0) ? "-" : "";
