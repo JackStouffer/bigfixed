@@ -374,12 +374,12 @@ public:
     @safe unittest
     {
         string[BigFixed] aa;
-        aa[BigFixed(123,10)] = "abc";
-        aa[BigFixed(456,10)] = "def";
-        aa[BigFixed(456,5)] = "ghi";
+        aa[BigFixed(123, 10)] = "abc";
+        aa[BigFixed(456, 10)] = "def";
+        aa[BigFixed(456, 5)] = "ghi";
 
-        assert(aa[BigFixed(123,10)] == "abc");
-        assert(aa[BigFixed(456,10)] == "def");
-        assert(aa[BigFixed(456,5)] == "ghi");
+        assert(aa[BigFixed(123, 10)] == "abc");
+        assert(aa[BigFixed(456, 10)] == "def");
+        assert(aa[BigFixed(456, 5)] == "ghi");
     }
 }
