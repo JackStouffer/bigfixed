@@ -415,4 +415,34 @@ public:
         assert(aa[BigFixed(456, 10)] == "def");
         assert(aa[BigFixed(456, 5)] == "ghi");
     }
+    /// Implements BigFixed unary operators.
+    BigFixed opUnary(string op)() pure nothrow const 
+            if (op == "+" || op == "-" || op == "~")
+    {
+        static if (op == "+")
+        {
+            return this;
+        }
+        else static if (op == "-")
+        {
+            BigFixed r = this;
+            r.data = -r.data;
+            return r;
+        }
+        else static if (op == "~")
+        {
+            BigFixed r = this;
+            r.data = ~r.data;
+            return r;
+        }
+    }
+    ///
+    @system unittest
+    {
+        immutable x = BigFixed(1, 10) / 2;
+
+        assert(+x == x);
+        assert(-x == BigFixed(-1, 10) / 2);
+        assert(~x == -x - x.resolution);
+    }
 }
