@@ -152,7 +152,7 @@ public:
     }
 
     /// Minimum number that can be represented greater than 0
-    @property BigFixed resolution() pure
+    @property BigFixed resolution() pure const nothrow
     {
         auto result = BigFixed(0, this.Q);
         result.data = 1;
@@ -398,7 +398,7 @@ public:
         assert(z > y);
         assert(x < w);
     }
-    // Implement toHash so that BigFixed works properly as an AA key.
+    /// Implement toHash so that BigFixed works properly as an AA key.
     size_t toHash() const @safe nothrow
     {
         return this.data.toHash() + this.Q;
@@ -414,5 +414,35 @@ public:
         assert(aa[BigFixed(123, 10)] == "abc");
         assert(aa[BigFixed(456, 10)] == "def");
         assert(aa[BigFixed(456, 5)] == "ghi");
+    }
+    /// Implements BigFixed unary operators.
+    BigFixed opUnary(string op)() pure nothrow const 
+            if (op == "+" || op == "-" || op == "~")
+    {
+        static if (op == "+")
+        {
+            return this;
+        }
+        else static if (op == "-")
+        {
+            BigFixed r = this;
+            r.data = -r.data;
+            return r;
+        }
+        else static if (op == "~")
+        {
+            BigFixed r = this;
+            r.data = ~r.data;
+            return r;
+        }
+    }
+    ///
+    @system unittest
+    {
+        immutable x = BigFixed(1, 10) / 2;
+
+        assert(+x == x);
+        assert(-x == BigFixed(-1, 10) / 2);
+        assert(~x == -x - x.resolution);
     }
 }
