@@ -398,7 +398,7 @@ public:
         assert(z > y);
         assert(x < w);
     }
-    // Implement toHash so that BigFixed works properly as an AA key.
+    /// Implement toHash so that BigFixed works properly as an AA key.
     size_t toHash() const @safe nothrow
     {
         return this.data.toHash() + this.Q;
