@@ -152,7 +152,7 @@ public:
     }
 
     /// Minimum number that can be represented greater than 0
-    @property BigFixed resolution() pure
+    @property BigFixed resolution() pure const nothrow
     {
         auto result = BigFixed(0, this.Q);
         result.data = 1;
